@@ -1,0 +1,3 @@
+OrdonAI is an AI tool to help patients better understand and follow their prescriptions.
+In France, patients often receive prescriptions via paper or platforms like Doctolib, and then have to manually interpret instructions, organize treatments, and remember when and how to take multiple medications. This process is often confusing and error-prone.
+OrdonAI turns prescriptions into a clear, structured treatment plan. Users upload their prescription and are given a simple daily schedule showing what to take, when, and how, along with reminders. The goal is to reduce confusion, improve adherence, and make treatment management more reliable.
