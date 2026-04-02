@@ -756,10 +756,10 @@ function renderStep3() {
             </div>
             ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
             <div class="sched-section">
-                <div class="field" style="margin-bottom:.6rem">
-                    <label for="s${i}-date">Date de début</label>
+                <label class="field" style="margin-bottom:.6rem;display:block;cursor:pointer" for="s${i}-date">
+                    <span style="display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.3rem">Date de début</span>
                     <input type="date" class="date-field-clickable" id="s${i}-date" value="${m.startDate || today}" />
-                </div>
+                </label>
                 <div class="time-slots-grid">${timesHTML}</div>
             </div>
         </div>`;
