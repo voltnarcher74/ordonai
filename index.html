@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrdonAI — Lecteur d'ordonnances</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --matin: #f59e0b;
+            --midi: #10b981;
+            --soir: #8b5cf6;
+            --nuit: #1e40af;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #7c3aed 100%);
+            color: white;
+            padding: 2.5rem 1rem 2rem;
+            text-align: center;
+        }
+        header h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; }
+        header h1 span { color: #93c5fd; }
+        header p { margin-top: .4rem; font-size: 1rem; opacity: .85; }
+
+        /* ── Layout ── */
+        .container { max-width: 700px; margin: 0 auto; padding: 2rem 1rem; }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .card h2 {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Upload zone ── */
+        .upload-zone {
+            border: 2.5px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            background: #f8fafc;
+        }
+        .upload-zone:hover, .upload-zone.drag-over {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+        .upload-zone .zone-icon { font-size: 3rem; margin-bottom: .6rem; }
+        .upload-zone h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: .2rem; }
+        .upload-zone p { font-size: .85rem; color: var(--muted); }
+        .upload-zone input { display: none; }
+
+        .file-badge {
+            display: none;
+            align-items: center;
+            gap: .75rem;
+            padding: .7rem 1rem;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            margin-top: .75rem;
+        }
+        .file-badge .file-name {
+            flex: 1;
+            font-weight: 500;
+            font-size: .875rem;
+            color: var(--primary-dark);
+            word-break: break-all;
+        }
+
+        /* ── Buttons ── */
+        .btn-analyze {
+            width: 100%;
+            margin-top: 1rem;
+            padding: .875rem;
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s, transform .1s;
+        }
+        .btn-analyze:hover:not(:disabled) { opacity: .92; transform: translateY(-1px); }
+        .btn-analyze:disabled { opacity: .45; cursor: not-allowed; }
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            width: 100%;
+            padding: .875rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s;
+        }
+        .btn-download:hover { opacity: .9; }
+
+        /* ── Error ── */
+        .error-box {
+            display: none;
+            margin-top: .75rem;
+            padding: .875rem 1rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: .875rem;
+        }
+
+        /* ── Loading ── */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2.5rem 1rem;
+        }
+        .spinner {
+            width: 44px; height: 44px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .75s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { color: var(--muted); font-size: .925rem; }
+
+        /* ── Results ── */
+        #results { display: none; }
+
+        /* Schedule grid */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 460px) { .schedule-grid { grid-template-columns: 1fr; } }
+
+        .time-slot { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+
+        .slot-header {
+            padding: .7rem 1rem;
+            color: white;
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+        .slot-header .slot-time { margin-left: auto; font-size: .78rem; opacity: .85; }
+
+        .time-slot.matin .slot-header  { background: var(--matin); }
+        .time-slot.midi  .slot-header  { background: var(--midi);  }
+        .time-slot.soir  .slot-header  { background: var(--soir);  }
+        .time-slot.nuit  .slot-header  { background: var(--nuit);  }
+
+        .slot-body {
+            padding: .75rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            min-height: 76px;
+        }
+
+        .med-row {
+            display: flex;
+            align-items: flex-start;
+            gap: .5rem;
+            padding: .45rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .85rem;
+        }
+        .med-row:last-child { border-bottom: none; }
+        .med-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+        .time-slot.matin .med-dot { background: var(--matin); }
+        .time-slot.midi  .med-dot { background: var(--midi);  }
+        .time-slot.soir  .med-dot { background: var(--soir);  }
+        .time-slot.nuit  .med-dot { background: var(--nuit);  }
+
+        .med-row strong { display: block; font-weight: 600; }
+        .med-row span   { color: var(--muted); }
+        .no-med { font-size: .8rem; color: var(--muted); font-style: italic; padding: .4rem 0; }
+
+        /* Med detail cards */
+        .med-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: .75rem;
+        }
+        .med-card:last-child { margin-bottom: 0; }
+        .med-card h3 { font-size: 1rem; font-weight: 700; }
+
+        .tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+        .tag {
+            display: inline-block;
+            padding: .2rem .65rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 500;
+        }
+        .tag-blue   { background: #dbeafe; color: #1d4ed8; }
+        .tag-green  { background: #d1fae5; color: #065f46; }
+        .tag-orange { background: #fef3c7; color: #92400e; }
+
+        .note {
+            margin-top: .6rem;
+            padding: .4rem .7rem;
+            background: #fef9c3;
+            border-left: 3px solid #f59e0b;
+            border-radius: 0 4px 4px 0;
+            font-size: .82rem;
+            color: #78350f;
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            font-size: .76rem;
+            color: var(--muted);
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            margin-top: .5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ordon<span>AI</span></h1>
+    <p>Lisez et gérez vos ordonnances françaises avec l'intelligence artificielle</p>
+</header>
+
+<div class="container">
+
+    <!-- Upload ordonnance -->
+    <div class="card">
+        <h2>📋 Votre ordonnance</h2>
+
+        <div class="upload-zone" id="uploadZone">
+            <div class="zone-icon">📄</div>
+            <h3>Déposez votre ordonnance ici</h3>
+            <p>Photo (JPG, PNG, HEIC) ou PDF · Cliquez ou glissez-déposez</p>
+            <input type="file" id="fileInput" accept="image/*,.pdf" />
+        </div>
+
+        <div class="file-badge" id="fileBadge">
+            <span id="fileIcon" style="font-size:1.4rem">📷</span>
+            <span class="file-name" id="fileName"></span>
+        </div>
+
+        <button class="btn-analyze" id="analyzeBtn" disabled onclick="analyzeFile()">
+            ✨ Analyser l'ordonnance
+        </button>
+        <div class="error-box" id="errorBox"></div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Analyse de votre ordonnance en cours…</p>
+    </div>
+
+    <!-- Résultats -->
+    <div id="results">
+
+        <div class="card">
+            <h2>🕐 Programme des prises</h2>
+            <div class="schedule-grid" id="scheduleGrid"></div>
+        </div>
+
+        <div class="card">
+            <h2>💊 Détail des médicaments</h2>
+            <div id="medList"></div>
+        </div>
+
+        <div class="card">
+            <h2>📅 Rappels calendrier</h2>
+            <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">
+                Importez le fichier <strong>.ics</strong> dans Google Agenda, Apple Calendrier ou Outlook
+                pour recevoir des rappels automatiques.
+            </p>
+            <button class="btn-download" onclick="downloadICS()">
+                ⬇️&nbsp; Télécharger les rappels (.ics)
+            </button>
+        </div>
+
+        <p class="disclaimer">
+            ⚠️ OrdonAI est un outil d'aide à la compréhension uniquement.<br>
+            Consultez toujours votre médecin ou pharmacien pour toute question médicale.
+        </p>
+    </div>
+
+</div>
+
+<script>
+'use strict';
+
+let extractedMeds = [];
+let currentFile   = null;
+
+/* ── File upload ── */
+const uploadZone = document.getElementById('uploadZone');
+const fileInput  = document.getElementById('fileInput');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+
+uploadZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+
+function setFile(file) {
+    currentFile = file;
+    const isPDF = file.type === 'application/pdf';
+    document.getElementById('fileIcon').textContent = isPDF ? '📄' : '🖼️';
+    document.getElementById('fileName').textContent  = file.name;
+    document.getElementById('fileBadge').style.display = 'flex';
+    document.getElementById('analyzeBtn').disabled = false;
+    hideError();
+}
+
+/* ── Helpers ── */
+function toBase64(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+    });
+}
+
+function escHtml(s) {
+    return String(s || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showError(msg) {
+    const b = document.getElementById('errorBox');
+    b.textContent = msg;
+    b.style.display = 'block';
+}
+function hideError() { document.getElementById('errorBox').style.display = 'none'; }
+
+/* ── Analyse ── */
+async function analyzeFile() {
+    if (!currentFile)  { showError('Veuillez sélectionner un fichier.'); return; }
+
+    document.getElementById('loading').style.display  = 'block';
+    document.getElementById('results').style.display  = 'none';
+    document.getElementById('analyzeBtn').disabled    = true;
+    hideError();
+
+    try {
+        const base64 = await toBase64(currentFile);
+        const isPDF  = currentFile.type === 'application/pdf';
+
+        const fileBlock = isPDF
+            ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
+            : { type: 'image',    source: { type: 'base64', media_type: currentFile.type || 'image/jpeg', data: base64 } };
+
+        const prompt = `Tu es un assistant spécialisé dans la lecture d'ordonnances médicales françaises.
+Analyse cette ordonnance et extrais tous les médicaments prescrits.
+
+Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour, selon ce format exact :
+{
+  "medications": [
+    {
+      "name": "Nom du médicament",
+      "dosage": "ex: 500 mg",
+      "frequency": "ex: 3 fois par jour",
+      "duration": "ex: 7 jours",
+      "duration_days": 7,
+      "schedule": ["matin","midi","soir"],
+      "special_instructions": "ex: Prendre avec les repas — null si aucune"
+    }
+  ]
+}
+
+Règles :
+- "schedule" : utilise uniquement "matin" (≈8h), "midi" (≈12h), "soir" (≈19h), "nuit" (≈22h).
+- Déduis le schedule depuis la fréquence : 1×/j → ["matin"] ; 2×/j → ["matin","soir"] ; 3×/j → ["matin","midi","soir"] ; 4×/j → toutes les 4 slots.
+- Si la durée est absente, pose duration_days = 30.
+- Si tu ne peux pas lire l'ordonnance, renvoie medications = [].`;
+
+        const resp = await fetch('/api/proxy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-5',
+                max_tokens: 2048,
+                messages: [{ role: 'user', content: [fileBlock, { type: 'text', text: prompt }] }]
+            })
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            throw new Error(err.error?.message || `Erreur API ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        let raw = data.content[0].text.trim();
+
+        // strip optional markdown fences
+        const fence = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (fence) raw = fence[1].trim();
+
+        const parsed = JSON.parse(raw);
+        extractedMeds = parsed.medications || [];
+
+        if (extractedMeds.length === 0) {
+            showError("Aucun médicament n'a pu être extrait. Vérifiez que l'image est nette et lisible.");
+            return;
+        }
+
+        renderResults(extractedMeds);
+
+    } catch (err) {
+        showError('Erreur : ' + err.message);
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('analyzeBtn').disabled   = false;
+    }
+}
+
+/* ── Render ── */
+function renderResults(meds) {
+    renderSchedule(meds);
+    renderMedList(meds);
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+const SLOTS = [
+    { key: 'matin', label: 'Matin',  icon: '🌅', time: '8h00'  },
+    { key: 'midi',  label: 'Midi',   icon: '☀️', time: '12h00' },
+    { key: 'soir',  label: 'Soir',   icon: '🌆', time: '19h00' },
+    { key: 'nuit',  label: 'Nuit',   icon: '🌙', time: '22h00' },
+];
+
+function renderSchedule(meds) {
+    const grid = document.getElementById('scheduleGrid');
+    grid.innerHTML = '';
+
+    SLOTS.forEach(slot => {
+        const slotMeds = meds.filter(m => (m.schedule || []).includes(slot.key));
+
+        const medsHTML = slotMeds.length
+            ? slotMeds.map(m => `
+                <div class="med-row">
+                    <div class="med-dot"></div>
+                    <div>
+                        <strong>${escHtml(m.name)}</strong>
+                        <span>${escHtml(m.dosage)}</span>
+                    </div>
+                </div>`).join('')
+            : '<div class="no-med">Aucune prise</div>';
+
+        const el = document.createElement('div');
+        el.className = `time-slot ${slot.key}`;
+        el.innerHTML = `
+            <div class="slot-header">
+                <span>${slot.icon}</span>
+                <span>${slot.label}</span>
+                <span class="slot-time">${slot.time}</span>
+            </div>
+            <div class="slot-body">${medsHTML}</div>`;
+        grid.appendChild(el);
+    });
+}
+
+function renderMedList(meds) {
+    document.getElementById('medList').innerHTML = meds.map(m => `
+        <div class="med-card">
+            <h3>💊 ${escHtml(m.name)}</h3>
+            <div class="tags">
+                ${m.dosage    ? `<span class="tag tag-blue">📏 ${escHtml(m.dosage)}</span>`    : ''}
+                ${m.frequency ? `<span class="tag tag-green">🔁 ${escHtml(m.frequency)}</span>` : ''}
+                ${m.duration  ? `<span class="tag tag-orange">📅 ${escHtml(m.duration)}</span>` : ''}
+            </div>
+            ${m.special_instructions && m.special_instructions !== 'null'
+                ? `<div class="note">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
+        </div>`).join('');
+}
+
+/* ── ICS export ── */
+const TIME_MAP  = { matin: '080000', midi: '120000', soir: '190000', nuit: '220000' };
+const LABEL_MAP = { matin: 'Matin',  midi: 'Midi',   soir: 'Soir',   nuit: 'Nuit'  };
+
+function icsDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2,'0');
+    const d = String(date.getDate()).padStart(2,'0');
+    return `${y}${m}${d}`;
+}
+
+function addMins(hhmmss, mins) {
+    const h = parseInt(hhmmss.slice(0,2));
+    const m = parseInt(hhmmss.slice(2,4)) + mins;
+    return `${String(h).padStart(2,'0')}${String(m).padStart(2,'0')}00`;
+}
+
+function icsEscape(s) {
+    return String(s || '').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+}
+
+function downloadICS() {
+    const today = new Date();
+    const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//OrdonAI//FR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+    ];
+
+    extractedMeds.forEach(med => {
+        const count = Math.max(1, parseInt(med.duration_days) || 30);
+
+        (med.schedule || []).forEach(slot => {
+            const t     = TIME_MAP[slot]  || '080000';
+            const label = LABEL_MAP[slot] || slot;
+            const uid   = `ordonai-${Date.now()}-${Math.random().toString(36).slice(2)}@ordonai`;
+            const desc  = [med.frequency, med.special_instructions]
+                            .filter(x => x && x !== 'null').join(' | ');
+
+            lines.push(
+                'BEGIN:VEVENT',
+                `UID:${uid}`,
+                `DTSTART:${icsDate(today)}T${t}`,
+                `DTEND:${icsDate(today)}T${addMins(t,5)}`,
+                `RRULE:FREQ=DAILY;COUNT=${count}`,
+                `SUMMARY:${icsEscape(med.name)}${med.dosage ? ' ' + med.dosage : ''} — ${label}`,
+                `DESCRIPTION:${icsEscape(desc)}`,
+                'BEGIN:VALARM',
+                'TRIGGER:-PT10M',
+                'ACTION:DISPLAY',
+                `DESCRIPTION:Rappel : ${icsEscape(med.name)}`,
+                'END:VALARM',
+                'END:VEVENT',
+            );
+        });
+    });
+
+    lines.push('END:VCALENDAR');
+
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'ordonai-rappels.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
