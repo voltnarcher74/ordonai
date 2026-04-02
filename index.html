@@ -425,7 +425,6 @@
     <div class="step-panel" id="panel-4">
         <div class="step-heading">
             <h2>Votre programme est prêt ✅</h2>
-            <p>Téléchargez vos rappels et importez-les dans votre calendrier.</p>
         </div>
         <button class="btn-download" onclick="downloadICS()">⬇️ Télécharger votre programme</button>
         <p class="dl-hint">Importez ce fichier dans Google Agenda, Apple Calendrier ou Outlook</p>
@@ -742,7 +741,7 @@ function renderStep3() {
         const timesHTML = slotKeys.map(key => {
             const s   = SLOTS[key] || { label: key, time: '08:00' };
             const val = m.times?.[key] || s.time;
-            return `<label class="time-slot-item" for="s${i}-time-${key}" onclick="document.getElementById('s${i}-time-${key}').showPicker()">
+            return `<label class="time-slot-item" for="s${i}-time-${key}" onclick="event.preventDefault();var el=document.getElementById('s${i}-time-${key}');el.focus();el.showPicker();">
                 <span style="display:block;font-size:.68rem;color:var(--muted);font-weight:600;margin-bottom:.2rem">${s.label}</span>
                 <input type="time" class="time-input" id="s${i}-time-${key}" value="${val}" />
             </label>`;
@@ -756,7 +755,7 @@ function renderStep3() {
             </div>
             ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
             <div class="sched-section">
-                <label class="field" style="margin-bottom:.6rem;display:block;cursor:pointer" for="s${i}-date" onclick="document.getElementById('s${i}-date').showPicker()">
+                <label class="field" style="margin-bottom:.6rem;display:block;cursor:pointer" for="s${i}-date" onclick="event.preventDefault();var el=document.getElementById('s${i}-date');el.focus();el.showPicker();">
                     <span style="display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.3rem">Date de début</span>
                     <input type="date" class="date-field-clickable" id="s${i}-date" value="${m.startDate || today}" />
                 </label>
