@@ -80,41 +80,22 @@
             color: white;
             box-shadow: 0 0 0 3px rgba(37,99,235,.18);
         }
-        .step-dot.done {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-        .step-label {
-            font-size: 0.6rem;
-            color: var(--muted);
-            text-align: center;
-            white-space: nowrap;
-        }
+        .step-dot.done { background: var(--success); border-color: var(--success); color: white; }
+        .step-label { font-size: 0.6rem; color: var(--muted); text-align: center; white-space: nowrap; }
         .step-label.active { color: var(--primary); font-weight: 700; }
         .step-label.done   { color: var(--success); }
         .progress-line {
-            flex: 1;
-            height: 2px;
-            background: var(--border);
-            margin: 0 0.2rem 1.1rem;
-            transition: background 0.4s;
+            flex: 1; height: 2px; background: var(--border);
+            margin: 0 0.2rem 1.1rem; transition: background 0.4s;
         }
         .progress-line.done { background: var(--success); }
 
         /* ── Container ── */
-        .container {
-            max-width: 580px;
-            margin: 0 auto;
-            padding: 1.5rem 1rem 3rem;
-        }
+        .container { max-width: 580px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 
         /* ── Step panels ── */
         .step-panel { display: none; }
-        .step-panel.active {
-            display: block;
-            animation: fadeUp 0.28s ease;
-        }
+        .step-panel.active { display: block; animation: fadeUp 0.28s ease; }
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -136,472 +117,172 @@
 
         /* ── Form fields ── */
         .field { margin-bottom: 0.8rem; }
-        .field:last-child { margin-bottom: 0; }
         .field label {
             display: block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.3rem;
+            font-size: 0.7rem; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;
         }
         .field input[type="text"],
-        .field input[type="date"],
-        .field textarea {
-            width: 100%;
-            padding: 0.6rem 0.75rem;
-            border: 1.5px solid var(--border);
-            border-radius: 7px;
-            font-size: 0.875rem;
-            outline: none;
-            background: #f8fafc;
-            color: var(--text);
-            font-family: inherit;
+        .field input[type="date"] {
+            width: 100%; padding: 0.6rem 0.75rem;
+            border: 1.5px solid var(--border); border-radius: 7px;
+            font-size: 0.875rem; outline: none;
+            background: #f8fafc; color: var(--text); font-family: inherit;
             transition: border-color 0.2s, background 0.2s;
         }
-        .field input:focus, .field textarea:focus {
-            border-color: var(--primary);
-            background: white;
-        }
-        .field textarea { resize: vertical; min-height: 58px; }
+        .field input:focus { border-color: var(--primary); background: white; }
 
         /* ── Upload zone ── */
         .upload-zone {
-            border: 2.5px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 2.75rem 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
-            background: #f8fafc;
+            border: 2.5px dashed var(--border); border-radius: var(--radius);
+            padding: 2.75rem 1.5rem; text-align: center; cursor: pointer;
+            transition: border-color 0.2s, background 0.2s; background: #f8fafc;
         }
-        .upload-zone:hover, .upload-zone.drag-over {
-            border-color: var(--primary);
-            background: #eff6ff;
-        }
+        .upload-zone:hover, .upload-zone.drag-over { border-color: var(--primary); background: #eff6ff; }
         .upload-zone .zone-icon { font-size: 3rem; margin-bottom: 0.6rem; }
         .upload-zone h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
         .upload-zone p  { font-size: 0.8rem; color: var(--muted); }
         .upload-zone input[type="file"] { display: none; }
 
         .file-badge {
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 1rem;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            margin-top: 0.75rem;
+            display: none; align-items: center; gap: 0.75rem;
+            padding: 0.65rem 1rem; background: #eff6ff;
+            border: 1px solid #bfdbfe; border-radius: 8px; margin-top: 0.75rem;
         }
         .file-badge .file-name {
-            flex: 1;
-            font-weight: 500;
-            font-size: 0.85rem;
-            color: var(--primary-dark);
-            word-break: break-all;
+            flex: 1; font-weight: 500; font-size: 0.85rem;
+            color: var(--primary-dark); word-break: break-all;
         }
 
         /* ── Buttons ── */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            padding: 0.75rem 1.1rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.2s, transform 0.1s;
-            font-family: inherit;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 0.35rem; padding: 0.75rem 1.1rem; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none;
+            transition: opacity 0.2s, transform 0.1s; font-family: inherit; white-space: nowrap;
         }
         .btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
         .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #7c3aed);
-            color: white;
-            flex: 1;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; flex: 1; }
         .btn-outline {
-            background: white;
-            color: var(--text);
-            border: 1.5px solid var(--border);
-            flex-shrink: 0;
+            background: white; color: var(--text);
+            border: 1.5px solid var(--border); flex-shrink: 0;
         }
-        .btn-outline:hover:not(:disabled) {
-            border-color: var(--primary);
-            color: var(--primary);
-            opacity: 1;
-            transform: none;
-        }
+        .btn-outline:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); opacity: 1; transform: none; }
 
         /* ── Step nav ── */
-        .step-nav {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.25rem;
-            align-items: stretch;
-        }
+        .step-nav { display: flex; gap: 0.75rem; margin-top: 1.25rem; align-items: stretch; }
 
         /* ── Error ── */
         .error-box {
-            display: none;
-            padding: 0.8rem 1rem;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            color: #991b1b;
-            font-size: 0.85rem;
-            margin-top: 0.75rem;
+            display: none; padding: 0.8rem 1rem;
+            background: #fef2f2; border: 1px solid #fecaca;
+            border-radius: 8px; color: #991b1b; font-size: 0.85rem; margin-top: 0.75rem;
         }
 
         /* ── Loading ── */
-        .loading-view {
-            display: none;
-            text-align: center;
-            padding: 4rem 1rem;
-        }
+        .loading-view { display: none; text-align: center; padding: 4rem 1rem; }
         .spinner {
-            width: 48px; height: 48px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.75s linear infinite;
-            margin: 0 auto 1.25rem;
+            width: 48px; height: 48px; border: 3px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 0.75s linear infinite; margin: 0 auto 1.25rem;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-view p { color: var(--muted); font-size: 0.925rem; }
         .loading-view p + p { font-size: 0.8rem; margin-top: 0.3rem; }
 
-        /* ── Shared card title (Steps 2 & 3) ── */
-        .med-name   { font-size: 1rem; font-weight: 700; color: var(--text); }
-        .med-dosage { font-weight: 600; color: var(--primary); }
-
-        /* ── Edit action buttons ── */
-        .edit-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.875rem; }
-        .btn-validate {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.5rem 1rem;
-            background: #ecfdf5; border: 1.5px solid #10b981;
-            border-radius: 7px; color: #065f46;
-            font-size: 0.85rem; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: background 0.15s;
+        /* ── Summary cards (Steps 2, 3 & 4 share this style) ── */
+        .summary-card {
+            border-left: 3px solid var(--primary);
+            transition: border-left-color 0.25s;
         }
-        .btn-validate:hover { background: #d1fae5; }
-        .btn-remove-card {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.5rem 1rem;
-            background: none; border: 1.5px solid #fecaca;
-            border-radius: 7px; color: #ef4444;
-            font-size: 0.85rem; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: background 0.15s;
+        .summary-card.verified { border-left-color: var(--success); }
+        .summary-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .summary-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
+        .tag-sm {
+            font-size: 0.73rem; padding: 0.18rem 0.55rem;
+            border-radius: 999px; background: #f1f5f9; color: var(--muted);
         }
-        .btn-remove-card:hover { background: #fef2f2; }
-
-        /* ── Step 2 Phase 1: Compact cards ── */
-        .compact-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            margin-bottom: 0.6rem;
-            box-shadow: var(--shadow);
-            border: 1.5px solid var(--border);
-            overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
+        .summary-times { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+        .time-tag {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            padding: 0.2rem 0.6rem; border-radius: 999px;
+            font-size: 0.75rem; font-weight: 600;
+            background: #eff6ff; color: var(--primary-dark);
         }
-        .compact-card.checked {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16,185,129,.08), var(--shadow);
-        }
-        .compact-card-main {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            padding: 0.875rem 1rem;
-        }
-        .check-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.2rem;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-        .check-input {
-            width: 20px; height: 20px;
-            accent-color: var(--success);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .check-text {
-            font-size: 0.55rem;
-            color: var(--muted);
-            text-align: center;
-            line-height: 1.2;
-            white-space: nowrap;
-        }
-        .compact-body { flex: 1; min-width: 0; }
-        .compact-name {
-            font-size: 0.925rem;
-            font-weight: 700;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .compact-meta {
-            font-size: 0.78rem;
-            color: var(--muted);
-            margin-top: 0.15rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .btn-edit-card {
-            background: none;
-            border: 1.5px solid var(--border);
-            border-radius: 6px;
-            padding: 0.28rem 0.65rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--muted);
-            cursor: pointer;
-            white-space: nowrap;
-            font-family: inherit;
-            transition: all 0.15s;
-            flex-shrink: 0;
-        }
-        .btn-edit-card:hover { border-color: var(--primary); color: var(--primary); background: #eff6ff; }
-        .compact-edit-section {
-            padding: 0 1rem 1rem;
-            border-top: 1px solid var(--border);
-            padding-top: 1rem;
+        .note-inline {
+            margin-top: 0.5rem; padding: 0.35rem 0.6rem;
+            background: #fef9c3; border-left: 3px solid #f59e0b;
+            border-radius: 0 4px 4px 0; font-size: 0.8rem; color: #78350f;
         }
 
-        /* ── Step 2 Phase 2: Reminder choice ── */
-        .phase-screen {
+        /* ── Step 2: Tick button ── */
+        .card-header-row {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 1.5rem 0 0.5rem;
-        }
-        .phase-screen .phase-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .phase-screen h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; }
-        .phase-screen p {
-            font-size: 0.95rem;
-            color: var(--muted);
-            line-height: 1.65;
-            max-width: 340px;
-            margin-bottom: 2rem;
-        }
-        .big-choice-btns {
-            display: flex;
-            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
             gap: 0.75rem;
-            width: 100%;
-        }
-        .btn-big {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            padding: 1.1rem 1.5rem;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            border: none;
-            transition: opacity 0.2s, transform 0.1s;
-            width: 100%;
-        }
-        .btn-big:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-big-yes {
-            background: linear-gradient(135deg, var(--primary), #7c3aed);
-            color: white;
-        }
-        .btn-big-no {
-            background: white;
-            color: var(--muted);
-            border: 1.5px solid var(--border);
-        }
-        .btn-big-no:hover { border-color: var(--muted); color: var(--text); opacity: 1; }
-
-        /* ── Step 3: Carousel ── */
-        .carousel-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            margin-bottom: 1.25rem;
-        }
-        .carousel-counter {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 0.6rem;
-        }
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.35rem;
-        }
-        .carousel-dot {
-            height: 6px;
-            width: 6px;
-            border-radius: 3px;
-            background: var(--border);
-            transition: width 0.25s, background 0.25s;
-        }
-        .carousel-dot.active {
-            background: var(--primary);
-            width: 18px;
-        }
-
-        .carousel-card { margin-bottom: 0; }
-        .carousel-card-header {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-            margin-bottom: 1.1rem;
-            padding-bottom: 0.875rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .times-section { }
-        .times-section .section-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: block;
             margin-bottom: 0.4rem;
+        }
+        .btn-tick {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid var(--border); background: white;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 900; color: var(--muted);
+            transition: all 0.2s; flex-shrink: 0;
+            line-height: 1;
+        }
+        .btn-tick:hover { border-color: var(--success); color: var(--success); }
+        .btn-tick.verified { border-color: var(--success); background: var(--success); color: white; }
+
+        /* ── Step 3: Schedule inputs inside summary card ── */
+        .sched-section {
+            margin-top: 0.875rem;
+            padding-top: 0.875rem;
+            border-top: 1px solid var(--border);
         }
         .time-slots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 0.5rem;
+            margin-top: 0.5rem;
         }
         .time-slot-item {
-            background: #f8fafc;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            padding: 0.5rem 0.6rem;
+            background: #f8fafc; border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 0.5rem 0.6rem;
         }
         .time-slot-item label {
-            display: block;
-            font-size: 0.68rem;
-            color: var(--muted);
-            font-weight: 600;
-            margin-bottom: 0.2rem;
+            display: block; font-size: 0.68rem; color: var(--muted);
+            font-weight: 600; margin-bottom: 0.2rem;
         }
         .time-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text);
-            outline: none;
-            font-family: inherit;
+            width: 100%; border: none; background: transparent;
+            font-size: 0.875rem; font-weight: 600; color: var(--text);
+            outline: none; font-family: inherit;
         }
 
-        /* ── Step 4 summary ── */
-        .summary-card { border-left: 3px solid var(--primary); }
-        .summary-card.skipped { border-left-color: var(--muted); opacity: 0.55; }
-        .summary-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
-        .summary-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
-        .tag-sm {
-            font-size: 0.73rem;
-            padding: 0.18rem 0.55rem;
-            border-radius: 999px;
-            background: #f1f5f9;
-            color: var(--muted);
-        }
-        .summary-times { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-        .time-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: #eff6ff;
-            color: var(--primary-dark);
-        }
-        .note-inline {
-            margin-top: 0.5rem;
-            padding: 0.35rem 0.6rem;
-            background: #fef9c3;
-            border-left: 3px solid #f59e0b;
-            border-radius: 0 4px 4px 0;
-            font-size: 0.8rem;
-            color: #78350f;
-        }
-
+        /* ── Step 4 ── */
         .btn-download {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-            padding: 1rem;
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.2s, transform 0.1s;
-            margin-bottom: 0.6rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; padding: 1rem; background: var(--success); color: white;
+            border: none; border-radius: 10px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            transition: opacity 0.2s, transform 0.1s; margin-bottom: 0.6rem;
         }
         .btn-download:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        .dl-hint {
-            font-size: 0.76rem;
-            color: var(--muted);
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
+        .dl-hint { font-size: 0.76rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
         .btn-restart {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            flex: 1;
-            padding: 0.75rem;
-            background: white;
-            color: var(--muted);
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+            flex: 1; padding: 0.75rem; background: white; color: var(--muted);
+            border: 1.5px solid var(--border); border-radius: 8px;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: all 0.2s;
         }
         .btn-restart:hover { border-color: var(--primary); color: var(--primary); }
-
         .disclaimer {
-            text-align: center;
-            font-size: 0.73rem;
-            color: var(--muted);
-            margin-top: 1.75rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-            line-height: 1.5;
+            text-align: center; font-size: 0.73rem; color: var(--muted);
+            margin-top: 1.75rem; padding-top: 1rem;
+            border-top: 1px solid var(--border); line-height: 1.5;
         }
     </style>
 </head>
@@ -610,7 +291,7 @@
 <!-- Header -->
 <div class="app-header">
     <h1>Ordon<span>AI</span></h1>
-    <p>Gérez vos ordonnances avec l'intelligence artificielle</p>
+    <p>Gérez vos ordonnances françaises avec l'intelligence artificielle</p>
 </div>
 
 <!-- Progress bar -->
@@ -643,25 +324,24 @@
     <!-- ── STEP 1 ── -->
     <div class="step-panel active" id="panel-1">
         <div class="step-heading">
-            <h2>Importez votre ordonnance</h2>
+            <h2>Analysez votre ordonnance</h2>
+            <p>Importez une photo ou un PDF pour extraire vos médicaments</p>
         </div>
-
         <div class="card">
             <div class="upload-zone" id="uploadZone">
                 <div class="zone-icon">📄</div>
-                <h3>Cliquez ou glissez-déposez votre ordonnance ici</h3>
-                <p>Photo (JPG, PNG) ou PDF </p>
+                <h3>Déposez votre ordonnance ici</h3>
+                <p>Photo (JPG, PNG) ou PDF · Cliquez ou glissez-déposez</p>
                 <input type="file" id="fileInput" accept="image/*,.pdf" />
             </div>
             <div class="file-badge" id="fileBadge">
                 <span id="fileIcon" style="font-size:1.35rem">📷</span>
                 <span class="file-name" id="fileName"></span>
-                <button class="btn-remove-card" style="padding:.25rem .6rem;font-size:.75rem;margin-top:0" onclick="clearFile()">✕</button>
+                <button onclick="clearFile()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;padding:.2rem .4rem">✕</button>
             </div>
         </div>
-
         <button class="btn btn-primary" id="analyzeBtn" disabled onclick="analyzeFile()" style="width:100%;margin-top:.25rem">
-            ✨ Analyser
+            ✨ Analyser l'ordonnance
         </button>
         <button class="btn btn-outline" id="fwd-1" style="display:none;width:100%;margin-top:.5rem" onclick="goToStep(2)">Continuer vers la vérification →</button>
         <div class="error-box" id="errorBox"></div>
@@ -670,66 +350,44 @@
     <!-- Loading -->
     <div class="loading-view" id="loadingView">
         <div class="spinner"></div>
-        <p>Analyse de votre ordonnance en cours…</p>
+        <p>Analyse en cours…</p>
+        <p>L'IA lit votre ordonnance</p>
     </div>
 
-    <!-- ── STEP 2 ── -->
+    <!-- ── STEP 2: Vérifier ── -->
     <div class="step-panel" id="panel-2">
-
-        <!-- Phase 1: List & verify -->
-        <div id="phase-1">
-            <div class="step-heading">
-                <h2>Vérifier les informations suivantes</h2>
-            </div>
-            <div id="medsEditor"></div>
-            <div class="step-nav">
-                <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
-                <button class="btn btn-primary" id="confirmAllBtn" disabled onclick="confirmPhase1()">Confirmer tout →</button>
-            </div>
+        <div class="step-heading">
+            <h2>Vérifier les informations suivantes</h2>
         </div>
-
-        <!-- Phase 2: Reminder choice -->
-        <div id="phase-2" style="display:none">
-            <div class="phase-screen">
-                <div class="phase-icon">🔔</div>
-                <h2>Voulez-vous configurer des rappels pour prendre vos médicaments ?</h2>
-                <div class="big-choice-btns">
-                    <button class="btn-big btn-big-yes" onclick="chooseReminders(true)">🗓 Oui</button>
-                    <button class="btn-big btn-big-no" onclick="chooseReminders(false)">Non</button>
-                </div>
-            </div>
-            <div class="step-nav" style="margin-top:1.5rem">
-                <button class="btn btn-outline" onclick="showPhase(1)">← Retour</button>
-            </div>
+        <div id="verifyList"></div>
+        <div class="step-nav">
+            <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
         </div>
-
     </div>
 
-    <!-- ── STEP 3: Carousel ── -->
+    <!-- ── STEP 3: Programmer ── -->
     <div class="step-panel" id="panel-3">
         <div class="step-heading">
+            <h2>Programmez vos rappels</h2>
         </div>
-        <div class="carousel-header">
-            <div class="carousel-counter" id="carouselCounter"></div>
-            <div class="carousel-dots"    id="carouselDots"></div>
-        </div>
-        <div id="carouselCard"></div>
+        <div id="schedList"></div>
         <div class="step-nav">
-            <button class="btn btn-outline" id="carPrev" onclick="carouselPrev()">← Précédent</button>
-            <button class="btn btn-primary" id="carNext" onclick="carouselNext()">Suivant →</button>
+            <button class="btn btn-outline" onclick="goToStep(2)">← Retour</button>
+            <button class="btn btn-primary" onclick="confirmSchedule()">Confirmer le programme →</button>
         </div>
     </div>
 
-    <!-- ── STEP 4 ── -->
+    <!-- ── STEP 4: Télécharger ── -->
     <div class="step-panel" id="panel-4">
         <div class="step-heading">
             <h2>Votre programme est prêt ✅</h2>
+            <p>Téléchargez vos rappels et importez-les dans votre calendrier.</p>
         </div>
         <div id="summary"></div>
         <button class="btn-download" onclick="downloadICS()">⬇️ Télécharger les rappels (.ics)</button>
         <p class="dl-hint">Importez ce fichier dans Google Agenda, Apple Calendrier ou Outlook</p>
         <div class="step-nav" style="margin-bottom:1rem">
-            <button class="btn btn-outline" onclick="step4Back()">← Retour</button>
+            <button class="btn btn-outline" onclick="goToStep(3)">← Retour</button>
             <button class="btn-restart" onclick="restart()">↺ Nouvelle ordonnance</button>
         </div>
         <p class="disclaimer">
@@ -738,12 +396,11 @@
         </p>
     </div>
 
-</div><!-- /container -->
+</div>
 
 <script>
 'use strict';
 
-/* ── Constants ── */
 const SLOTS = {
     matin: { label: 'Matin 🌅', time: '08:00' },
     midi:  { label: 'Midi ☀️',  time: '13:00' },
@@ -751,14 +408,10 @@ const SLOTS = {
     nuit:  { label: 'Nuit 🌙',  time: '22:00' },
 };
 
-/* ── State ── */
-let currentFile    = null;
-let meds           = [];
-let maxStep        = 1;
-let editingCards   = new Set();
-let checkedMeds    = new Set();
-let carouselIdx    = 0;
-let wantsReminders = false;
+let currentFile  = null;
+let meds         = [];
+let maxStep      = 1;
+let verifiedMeds = new Set();
 
 /* ── Progress bar ── */
 function goToStep(n) {
@@ -773,9 +426,6 @@ function goToStep(n) {
     document.getElementById(`panel-${n}`).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Entering step 2 always defaults to phase 1
-    if (n === 2) showPhase(1);
-
     maxStep = Math.max(maxStep, n);
     document.getElementById('fwd-1').style.display = maxStep > 1 ? 'block' : 'none';
 
@@ -784,24 +434,13 @@ function goToStep(n) {
         const lbl = document.getElementById(`lbl-${i}`);
         dot.classList.remove('active', 'done');
         lbl.classList.remove('active', 'done');
-        if (i < n) {
-            dot.classList.add('done'); dot.textContent = '✓'; lbl.classList.add('done');
-        } else if (i === n) {
-            dot.classList.add('active'); dot.textContent = i; lbl.classList.add('active');
-        } else {
-            dot.textContent = i;
-        }
+        if (i < n)       { dot.classList.add('done');   dot.textContent = '✓'; lbl.classList.add('done'); }
+        else if (i === n){ dot.classList.add('active'); dot.textContent = i;   lbl.classList.add('active'); }
+        else             { dot.textContent = i; }
     }
-    ['1-2', '2-3', '3-4'].forEach((pair, idx) => {
+    ['1-2','2-3','3-4'].forEach((pair, idx) => {
         document.getElementById(`line-${pair}`).classList.toggle('done', (idx + 1) < n);
     });
-}
-
-/* ── Phase toggling within Step 2 ── */
-function showPhase(n) {
-    document.getElementById('phase-1').style.display = n === 1 ? '' : 'none';
-    document.getElementById('phase-2').style.display = n === 2 ? '' : 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ── File upload ── */
@@ -826,7 +465,6 @@ function setFile(file) {
     document.getElementById('analyzeBtn').disabled     = false;
     hideError();
 }
-
 function clearFile() {
     currentFile = null;
     document.getElementById('fileBadge').style.display = 'none';
@@ -846,7 +484,6 @@ function toBase64(file) {
 
 async function analyzeFile() {
     if (!currentFile) { showError('Veuillez sélectionner un fichier.'); return; }
-
     hideError();
     document.getElementById('analyzeBtn').disabled = true;
     goToStep('loading');
@@ -915,7 +552,8 @@ Règles :
             return;
         }
 
-        renderPhase1();
+        verifiedMeds.clear();
+        renderStep2();
         goToStep(2);
 
     } catch (err) {
@@ -925,232 +563,88 @@ Règles :
     }
 }
 
-/* ── Step 2 Phase 1: Compact card list ── */
-function renderPhase1() {
-    checkedMeds.clear();
-    editingCards.clear();
-    document.getElementById('medsEditor').innerHTML = meds.map((m, i) => renderCompactCard(m, i, false)).join('');
-    updateConfirmBtn();
-}
-
-function renderCompactCard(m, i, isEditing) {
-    const isChecked = checkedMeds.has(i);
-    const meta = [m.frequency, m.duration].filter(Boolean).join(' · ');
-    return `<div class="compact-card${isChecked ? ' checked' : ''}" id="ccard-${i}">
-        <div class="compact-card-main">
-            <label class="check-wrap" title="C'est correct">
-                <input type="checkbox" class="check-input" id="chk-${i}" onchange="toggleCheck(${i})"${isChecked ? ' checked' : ''} />
-                <span class="check-text">C'est<br>correct</span>
-            </label>
-            <div class="compact-body">
-                <div class="compact-name">
-                    <span class="med-name">${escHtml(m.name)}</span>${m.dosage ? `<span class="med-dosage" style="font-size:.85rem;margin-left:.35rem">— ${escHtml(m.dosage)}</span>` : ''}
-                </div>
-                ${meta ? `<div class="compact-meta">${escHtml(meta)}</div>` : ''}
+/* ── Step 2: Vérifier ── */
+function renderStep2() {
+    document.getElementById('verifyList').innerHTML = meds.map((m, i) => {
+        const isVerified = verifiedMeds.has(i);
+        return `<div class="card summary-card${isVerified ? ' verified' : ''}" id="vcard-${i}">
+            <div class="card-header-row">
+                <h3>${escHtml(m.name)}${m.dosage ? ' — ' + escHtml(m.dosage) : ''}</h3>
+                <button class="btn-tick${isVerified ? ' verified' : ''}" id="tick-${i}"
+                    onclick="tickCard(${i})" title="C'est correct" ${isVerified ? 'disabled' : ''}>✓</button>
             </div>
-            <button class="btn-edit-card" onclick="toggleCompactEdit(${i})">${isEditing ? '✕ Fermer' : '✏️ Modifier'}</button>
-        </div>
-        ${isEditing ? `<div class="compact-edit-section">
-            <div class="field">
-                <label>Nom du médicament</label>
-                <input type="text" id="m${i}-name" value="${escHtml(m.name)}" />
+            <div class="summary-meta">
+                ${m.frequency ? `<span class="tag-sm">🔁 ${escHtml(m.frequency)}</span>` : ''}
+                ${m.duration  ? `<span class="tag-sm">📅 ${escHtml(m.duration)}</span>`  : ''}
             </div>
-            <div class="field">
-                <label>Dosage</label>
-                <input type="text" id="m${i}-dosage" value="${escHtml(m.dosage || '')}" placeholder="ex: 500 mg" />
-            </div>
-            <div class="field">
-                <label>Fréquence</label>
-                <input type="text" id="m${i}-freq" value="${escHtml(m.frequency || '')}" placeholder="ex: 3 fois par jour" />
-            </div>
-            <div class="field">
-                <label>Durée</label>
-                <input type="text" id="m${i}-dur" value="${escHtml(m.duration || '')}" placeholder="ex: 7 jours" />
-            </div>
-            <div class="field">
-                <label>Instructions spéciales</label>
-                <textarea id="m${i}-instr" placeholder="ex: Prendre avec les repas">${escHtml(m.special_instructions || '')}</textarea>
-            </div>
-            <div class="edit-actions">
-                <button class="btn-validate" onclick="saveCompactCard(${i})">✅ Valider</button>
-                <button class="btn-remove-card" onclick="removeCompactCard(${i})">🗑 Supprimer</button>
-            </div>
-        </div>` : ''}
-    </div>`;
-}
-
-function toggleCheck(i) {
-    if (checkedMeds.has(i)) {
-        checkedMeds.delete(i);
-        document.getElementById(`ccard-${i}`)?.classList.remove('checked');
-    } else {
-        checkedMeds.add(i);
-        document.getElementById(`ccard-${i}`)?.classList.add('checked');
-    }
-    updateConfirmBtn();
-}
-
-function updateConfirmBtn() {
-    document.getElementById('confirmAllBtn').disabled = !(meds.length > 0 && checkedMeds.size === meds.length);
-}
-
-function toggleCompactEdit(i) {
-    if (editingCards.has(i)) {
-        saveCompactCard(i);
-    } else {
-        editingCards.add(i);
-        document.getElementById(`ccard-${i}`).outerHTML = renderCompactCard(meds[i], i, true);
-    }
-}
-
-function saveCompactCard(i) {
-    const nameEl = document.getElementById(`m${i}-name`);
-    if (!nameEl) return;
-    meds[i] = {
-        ...meds[i],
-        name:                 nameEl.value.trim() || meds[i].name,
-        dosage:               document.getElementById(`m${i}-dosage`)?.value.trim() || '',
-        frequency:            document.getElementById(`m${i}-freq`)?.value.trim()   || '',
-        duration:             document.getElementById(`m${i}-dur`)?.value.trim()    || '',
-        special_instructions: document.getElementById(`m${i}-instr`)?.value.trim()  || '',
-    };
-    editingCards.delete(i);
-    document.getElementById(`ccard-${i}`).outerHTML = renderCompactCard(meds[i], i, false);
-}
-
-function removeCompactCard(i) {
-    const toSave = [...editingCards].filter(j => j !== i);
-    toSave.forEach(j => saveCompactCard(j));
-    editingCards.clear();
-    // Remap checked indices after splice
-    const newChecked = new Set();
-    checkedMeds.forEach(j => { if (j < i) newChecked.add(j); else if (j > i) newChecked.add(j - 1); });
-    checkedMeds = newChecked;
-    meds.splice(i, 1);
-    renderPhase1();
-}
-
-function confirmPhase1() {
-    [...editingCards].forEach(i => saveCompactCard(i));
-    meds = meds.filter(m => m.name.trim());
-    if (meds.length === 0) { alert('Veuillez conserver au moins un médicament.'); return; }
-    showPhase(2);
-}
-
-/* ── Step 2 Phase 2: Reminder choice ── */
-function chooseReminders(yes) {
-    wantsReminders = yes;
-    if (yes) {
-        carouselIdx = 0;
-        renderCarousel();
-        goToStep(3);
-    } else {
-        meds = meds.map(m => ({ ...m, remindersEnabled: false }));
-        renderStep4();
-        goToStep(4);
-    }
-}
-
-/* ── Step 3: Carousel ── */
-function renderCarousel() {
-    const m      = meds[carouselIdx];
-    const total  = meds.length;
-    const today  = new Date().toISOString().split('T')[0];
-    const slotKeys = (m.schedule?.length) ? m.schedule : ['matin'];
-
-    document.getElementById('carouselCounter').textContent = `Médicament ${carouselIdx + 1} sur ${total}`;
-
-    document.getElementById('carouselDots').innerHTML = meds.map((_, i) =>
-        `<div class="carousel-dot${i === carouselIdx ? ' active' : ''}"></div>`
-    ).join('');
-
-    const timesHTML = slotKeys.map(key => {
-        const s    = SLOTS[key] || { label: key, time: '08:00' };
-        const val  = m.times?.[key] || s.time;
-        return `<div class="time-slot-item">
-            <label>${s.label}</label>
-            <input type="time" class="time-input" id="c-time-${key}" value="${val}" />
+            ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
         </div>`;
     }).join('');
+}
 
-    document.getElementById('carouselCard').innerHTML = `
-        <div class="card carousel-card">
-            <div class="carousel-card-header">
-                <span class="med-name">${escHtml(m.name)}</span>
-                ${m.dosage ? `<span class="med-dosage">${escHtml(m.dosage)}</span>` : ''}
+function tickCard(i) {
+    verifiedMeds.add(i);
+    document.getElementById(`vcard-${i}`)?.classList.add('verified');
+    const btn = document.getElementById(`tick-${i}`);
+    if (btn) { btn.classList.add('verified'); btn.disabled = true; }
+
+    if (verifiedMeds.size === meds.length) {
+        setTimeout(() => {
+            renderStep3();
+            goToStep(3);
+        }, 350);
+    }
+}
+
+/* ── Step 3: Programmer ── */
+function renderStep3() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('schedList').innerHTML = meds.map((m, i) => {
+        const slotKeys  = (m.schedule?.length) ? m.schedule : ['matin'];
+        const timesHTML = slotKeys.map(key => {
+            const s   = SLOTS[key] || { label: key, time: '08:00' };
+            const val = m.times?.[key] || s.time;
+            return `<div class="time-slot-item">
+                <label>${s.label}</label>
+                <input type="time" class="time-input" id="s${i}-time-${key}" value="${val}" />
+            </div>`;
+        }).join('');
+
+        return `<div class="card summary-card">
+            <h3>${escHtml(m.name)}${m.dosage ? ' — ' + escHtml(m.dosage) : ''}</h3>
+            <div class="summary-meta">
+                ${m.frequency ? `<span class="tag-sm">🔁 ${escHtml(m.frequency)}</span>` : ''}
+                ${m.duration  ? `<span class="tag-sm">📅 ${escHtml(m.duration)}</span>`  : ''}
             </div>
-            <div class="field" style="margin-bottom:.875rem">
-                <label>Date de début</label>
-                <input type="date" id="c-date" value="${m.startDate || today}" />
-            </div>
-            <div class="times-section">
-                <label class="section-label">Horaires</label>
+            ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
+            <div class="sched-section">
+                <div class="field" style="margin-bottom:.6rem">
+                    <label>Date de début</label>
+                    <input type="date" id="s${i}-date" value="${m.startDate || today}" />
+                </div>
                 <div class="time-slots-grid">${timesHTML}</div>
             </div>
         </div>`;
-
-    // Nav button states
-    document.getElementById('carPrev').style.visibility = carouselIdx === 0 ? 'hidden' : 'visible';
-    document.getElementById('carNext').textContent = carouselIdx === total - 1 ? 'Confirmer →' : 'Suivant →';
+    }).join('');
 }
 
-function carouselSaveCurrent() {
-    const m        = meds[carouselIdx];
-    const slotKeys = (m.schedule?.length) ? m.schedule : ['matin'];
-    const times    = {};
-    slotKeys.forEach(key => {
-        const el = document.getElementById(`c-time-${key}`);
-        times[key] = el ? el.value : (SLOTS[key]?.time || '08:00');
+function confirmSchedule() {
+    meds = meds.map((m, i) => {
+        const slotKeys = (m.schedule?.length) ? m.schedule : ['matin'];
+        const times    = {};
+        slotKeys.forEach(key => {
+            const el = document.getElementById(`s${i}-time-${key}`);
+            times[key] = el ? el.value : (SLOTS[key]?.time || '08:00');
+        });
+        return { ...m, remindersEnabled: true, startDate: document.getElementById(`s${i}-date`).value, times };
     });
-    const startDate = document.getElementById('c-date')?.value || new Date().toISOString().split('T')[0];
-    meds[carouselIdx] = { ...m, startDate, times, remindersEnabled: true };
-}
-
-function carouselPrev() {
-    carouselSaveCurrent();
-    if (carouselIdx > 0) {
-        carouselIdx--;
-        renderCarousel();
-    } else {
-        goToStep(2);
-        showPhase(2);
-    }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function carouselNext() {
-    carouselSaveCurrent();
-    if (carouselIdx < meds.length - 1) {
-        carouselIdx++;
-        renderCarousel();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-        renderStep4();
-        goToStep(4);
-    }
-}
-
-/* ── Step 4 back ── */
-function step4Back() {
-    if (wantsReminders) {
-        carouselIdx = meds.length - 1;
-        renderCarousel();
-        goToStep(3);
-    } else {
-        goToStep(2);
-        showPhase(2);
-    }
+    renderStep4();
+    goToStep(4);
 }
 
 /* ── Step 4: Summary ── */
 function renderStep4() {
     document.getElementById('summary').innerHTML = meds.map(m => {
-        if (!m.remindersEnabled) {
-            return `<div class="card summary-card skipped">
-                <h3>${escHtml(m.name)}</h3>
-                <p style="font-size:.8rem;color:var(--muted)">Rappels désactivés</p>
-            </div>`;
-        }
         const slotKeys = (m.schedule?.length) ? m.schedule : ['matin'];
         const timeTags = slotKeys.map(key => {
             const label = SLOTS[key]?.label || key;
@@ -1179,16 +673,9 @@ function fmtDate(d) {
 
 /* ── ICS export ── */
 function downloadICS() {
-    const lines = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//OrdonAI//FR',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-    ];
+    const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//OrdonAI//FR','CALSCALE:GREGORIAN','METHOD:PUBLISH'];
 
     meds.forEach(med => {
-        if (!med.remindersEnabled) return;
         const count    = Math.max(1, parseInt(med.duration_days) || 30);
         const dateStr  = (med.startDate || new Date().toISOString().split('T')[0]).replace(/-/g, '');
         const slotKeys = (med.schedule?.length) ? med.schedule : ['matin'];
@@ -1200,27 +687,20 @@ function downloadICS() {
             const label   = SLOTS[key]?.label || key;
             const uid     = `ordonai-${Date.now()}-${Math.random().toString(36).slice(2)}@ordonai`;
             const desc    = [med.frequency, med.special_instructions].filter(x => x && x !== 'null').join(' | ');
-
             lines.push(
-                'BEGIN:VEVENT',
-                `UID:${uid}`,
-                `DTSTART:${dateStr}T${tStart}`,
-                `DTEND:${dateStr}T${tEnd}`,
+                'BEGIN:VEVENT', `UID:${uid}`,
+                `DTSTART:${dateStr}T${tStart}`, `DTEND:${dateStr}T${tEnd}`,
                 `RRULE:FREQ=DAILY;COUNT=${count}`,
                 `SUMMARY:${icsEsc(med.name)}${med.dosage ? ' ' + med.dosage : ''} — ${label}`,
                 `DESCRIPTION:${icsEsc(desc)}`,
-                'BEGIN:VALARM',
-                'TRIGGER:-PT10M',
-                'ACTION:DISPLAY',
+                'BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY',
                 `DESCRIPTION:Rappel : ${icsEsc(med.name)}`,
-                'END:VALARM',
-                'END:VEVENT',
+                'END:VALARM','END:VEVENT'
             );
         });
     });
 
     lines.push('END:VCALENDAR');
-
     const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
@@ -1232,18 +712,13 @@ function downloadICS() {
 function addMins(timeStr, mins) {
     const [h, m] = timeStr.split(':').map(Number);
     const total  = h * 60 + m + mins;
-    return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+    return `${String(Math.floor(total / 60)).padStart(2,'0')}:${String(total % 60).padStart(2,'0')}`;
 }
 
 /* ── Restart ── */
 function restart() {
-    currentFile    = null;
-    meds           = [];
-    maxStep        = 1;
-    carouselIdx    = 0;
-    wantsReminders = false;
-    editingCards.clear();
-    checkedMeds.clear();
+    currentFile = null; meds = []; maxStep = 1;
+    verifiedMeds.clear();
     document.getElementById('fileBadge').style.display = 'none';
     document.getElementById('analyzeBtn').disabled     = true;
     document.getElementById('errorBox').style.display  = 'none';
@@ -1253,20 +728,13 @@ function restart() {
 
 /* ── Helpers ── */
 function escHtml(s) {
-    return String(s || '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function icsEsc(s) {
-    return String(s || '')
-        .replace(/\\/g, '\\\\').replace(/;/g, '\\;')
-        .replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
 }
-function showError(msg) {
-    const b = document.getElementById('errorBox');
-    b.textContent = msg; b.style.display = 'block';
-}
-function hideError() { document.getElementById('errorBox').style.display = 'none'; }
+function showError(msg) { const b=document.getElementById('errorBox'); b.textContent=msg; b.style.display='block'; }
+function hideError() { document.getElementById('errorBox').style.display='none'; }
 </script>
 
 </body>
