@@ -277,16 +277,27 @@
         .time-slot-item {
             background: #f8fafc; border: 1.5px solid var(--border);
             border-radius: 8px; padding: 0.5rem 0.6rem;
+            cursor: pointer; transition: border-color 0.15s, background 0.15s;
         }
+        .time-slot-item:hover { border-color: var(--primary); background: #eff6ff; }
         .time-slot-item label {
             display: block; font-size: 0.68rem; color: var(--muted);
-            font-weight: 600; margin-bottom: 0.2rem;
+            font-weight: 600; margin-bottom: 0.2rem; cursor: pointer;
         }
         .time-input {
             width: 100%; border: none; background: transparent;
             font-size: 0.875rem; font-weight: 600; color: var(--text);
-            outline: none; font-family: inherit;
+            outline: none; font-family: inherit; cursor: pointer;
         }
+        .date-field-clickable {
+            width: 100%; padding: 0.6rem 0.75rem;
+            border: 1.5px solid var(--border); border-radius: 7px;
+            font-size: 0.875rem; outline: none; background: #f8fafc;
+            color: var(--text); font-family: inherit; cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .date-field-clickable:hover { border-color: var(--primary); background: #eff6ff; }
+        .date-field-clickable:focus { border-color: var(--primary); background: white; }
 
         /* ── Step 4 ── */
         .btn-download {
@@ -416,8 +427,7 @@
             <h2>Votre programme est prêt ✅</h2>
             <p>Téléchargez vos rappels et importez-les dans votre calendrier.</p>
         </div>
-        <div id="summary"></div>
-        <button class="btn-download" onclick="downloadICS()">⬇️ Télécharger les rappels (.ics)</button>
+        <button class="btn-download" onclick="downloadICS()">⬇️ Télécharger votre programme</button>
         <p class="dl-hint">Importez ce fichier dans Google Agenda, Apple Calendrier ou Outlook</p>
         <div class="step-nav" style="margin-bottom:1rem">
             <button class="btn btn-outline" onclick="goToStep(3)">← Retour</button>
@@ -732,10 +742,10 @@ function renderStep3() {
         const timesHTML = slotKeys.map(key => {
             const s   = SLOTS[key] || { label: key, time: '08:00' };
             const val = m.times?.[key] || s.time;
-            return `<div class="time-slot-item">
-                <label>${s.label}</label>
+            return `<label class="time-slot-item" for="s${i}-time-${key}">
+                <span style="display:block;font-size:.68rem;color:var(--muted);font-weight:600;margin-bottom:.2rem">${s.label}</span>
                 <input type="time" class="time-input" id="s${i}-time-${key}" value="${val}" />
-            </div>`;
+            </label>`;
         }).join('');
 
         return `<div class="card summary-card">
@@ -747,8 +757,8 @@ function renderStep3() {
             ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
             <div class="sched-section">
                 <div class="field" style="margin-bottom:.6rem">
-                    <label>Date de début</label>
-                    <input type="date" id="s${i}-date" value="${m.startDate || today}" />
+                    <label for="s${i}-date">Date de début</label>
+                    <input type="date" class="date-field-clickable" id="s${i}-date" value="${m.startDate || today}" />
                 </div>
                 <div class="time-slots-grid">${timesHTML}</div>
             </div>
@@ -772,25 +782,7 @@ function confirmSchedule() {
 
 /* ── Step 4: Summary ── */
 function renderStep4() {
-    document.getElementById('summary').innerHTML = meds.map(m => {
-        const slotKeys = (m.schedule?.length) ? m.schedule : ['matin'];
-        const timeTags = slotKeys.map(key => {
-            const label = SLOTS[key]?.label || key;
-            const time  = m.times?.[key]    || '08:00';
-            return `<span class="time-tag">${label} ${time}</span>`;
-        }).join('');
-
-        return `<div class="card summary-card">
-            <h3>${escHtml(m.name)}${m.dosage ? ' — ' + escHtml(m.dosage) : ''}</h3>
-            <div class="summary-meta">
-                ${m.frequency ? `<span class="tag-sm">🔁 ${escHtml(m.frequency)}</span>` : ''}
-                ${m.duration  ? `<span class="tag-sm">📅 ${escHtml(m.duration)}</span>`  : ''}
-                ${m.startDate ? `<span class="tag-sm">🗓 Début : ${fmtDate(m.startDate)}</span>` : ''}
-            </div>
-            <div class="summary-times">${timeTags}</div>
-            ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
-        </div>`;
-    }).join('');
+    document.getElementById('summary').innerHTML = '';
 }
 
 function fmtDate(d) {
