@@ -776,13 +776,7 @@ function confirmSchedule() {
         });
         return { ...m, remindersEnabled: true, startDate: document.getElementById(`s${i}-date`).value, times };
     });
-    renderStep4();
     goToStep(4);
-}
-
-/* ── Step 4: Summary ── */
-function renderStep4() {
-    document.getElementById('summary').innerHTML = '';
 }
 
 function fmtDate(d) {
