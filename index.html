@@ -216,7 +216,7 @@
             border-radius: 0 4px 4px 0; font-size: 0.8rem; color: #78350f;
         }
 
-        /* ── Step 2: Tick button ── */
+        /* ── Step 2: Verify card ── */
         .card-header-row {
             display: flex;
             align-items: flex-start;
@@ -224,16 +224,43 @@
             gap: 0.75rem;
             margin-bottom: 0.4rem;
         }
-        .btn-tick {
-            width: 32px; height: 32px; border-radius: 50%;
-            border: 2px solid var(--border); background: white;
+        .card-actions { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+
+        .btn-edit-inline {
+            width: 28px; height: 28px; border-radius: 6px;
+            border: 1.5px solid var(--border); background: white; color: var(--muted);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; font-weight: 900; color: var(--muted);
-            transition: all 0.2s; flex-shrink: 0;
-            line-height: 1;
+            font-size: 0.8rem; transition: all 0.15s; flex-shrink: 0; font-family: inherit;
         }
-        .btn-tick:hover { border-color: var(--success); color: var(--success); }
-        .btn-tick.verified { border-color: var(--success); background: var(--success); color: white; }
+        .btn-edit-inline:hover { border-color: var(--primary); color: var(--primary); background: #eff6ff; }
+
+        .btn-confirm-check {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.32rem 0.75rem; border-radius: 999px;
+            border: 2px solid var(--border); background: white; color: var(--muted);
+            font-size: 0.78rem; font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-confirm-check:hover:not(:disabled) {
+            border-color: var(--success); color: var(--success); background: #f0fdf4;
+        }
+        .btn-confirm-check.verified {
+            border-color: var(--success); background: var(--success); color: white; cursor: default;
+        }
+
+        .edit-inline-section {
+            margin-top: 0.875rem;
+            padding-top: 0.875rem;
+            border-top: 1px solid var(--border);
+        }
+        .edit-inline-section .field { margin-bottom: 0.6rem; }
+        .edit-inline-section .field:last-child { margin-bottom: 0; }
+
+        /* ── Confetti ── */
+        #confettiCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; display: none;
+        }
 
         /* ── Step 3: Schedule inputs inside summary card ── */
         .sched-section {
@@ -291,7 +318,7 @@
 <!-- Header -->
 <div class="app-header">
     <h1>Ordon<span>AI</span></h1>
-    <p>De l'ordonnance à un plan d'action : votre assistant organise vos traitements en quelques secondes.</p>
+    <p>Votre ordonnance transformée en plan de traitement concret, à importer facilement dans votre calendrier.</p>
 </div>
 
 <!-- Progress bar -->
@@ -345,6 +372,12 @@
         </button>
         <button class="btn btn-outline" id="fwd-1" style="display:none;width:100%;margin-top:.5rem" onclick="goToStep(2)">Continuer vers la vérification →</button>
         <div class="error-box" id="errorBox"></div>
+        <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--muted)">
+            Pas d'ordonnance sous la main ?
+            <button onclick="loadDemo()" style="background:none;border:none;color:var(--primary);font-size:0.8rem;font-weight:600;cursor:pointer;padding:0;font-family:inherit;text-decoration:underline">
+                Utiliser l'ordonnance de démonstration
+            </button>
+        </p>
     </div>
 
     <!-- Loading -->
@@ -398,8 +431,12 @@
 
 </div>
 
+<canvas id="confettiCanvas"></canvas>
+
 <script>
 'use strict';
+
+const DEMO_PDF = 'JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyA5IDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL1BhZ2VNb2RlIC9Vc2VOb25lIC9QYWdlcyA4IDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKNyAwIG9iago8PAovQXV0aG9yIChhbm9ueW1vdXMpIC9DcmVhdGlvbkRhdGUgKEQ6MjAyNjA0MDIxMTEzNDQrMDAnMDAnKSAvQ3JlYXRvciAoYW5vbnltb3VzKSAvS2V5d29yZHMgKCkgL01vZERhdGUgKEQ6MjAyNjA0MDIxMTEzNDQrMDAnMDAnKSAvUHJvZHVjZXIgKFJlcG9ydExhYiBQREYgTGlicmFyeSAtIFwob3BlbnNvdXJjZVwpKSAKICAvU3ViamVjdCAodW5zcGVjaWZpZWQpIC9UaXRsZSAodW50aXRsZWQpIC9UcmFwcGVkIC9GYWxzZQo+PgplbmRvYmoKOCAwIG9iago8PAovQ291bnQgMSAvS2lkcyBbIDUgMCBSIF0gL1R5cGUgL1BhZ2VzCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDc3NQo+PgpzdHJlYW0KR2F0VTBnTVdLRydSXVhWYltYTz5sV29mXlRQb2pNJy5WbyE/biU2OUsnWjMoQUFJPFRWTFJKKkcpNU5kQnA0LE9iN1Z0RFMyNWN0VmMsRyg8PD9FW2tSSWNMTCUjLFtBaUBMPHIzNFoiL0k6NF9YazBUKiIiO0YkQjZhUT1YLWlDYExHNlF0K0QyTl1IIywxKTo7VTxrbl1xZTIrb0tpISRAISIqQkM4dXNnMUEuV0A/LVtQTTckTCouQl9yST4kcGk2JyxSSyo3Zk9KdSQlYGJgXycnUWJiJF0mbmJWaTw5VjVDYlFQYWxmIkIpMS5LZWFxXFZVciwwOUctbyxUYFdpJ08ndG1LPThEOkZxUVgzbk1OKkRscGdyKCFlKFlCUkQkZG5dMmhTQS06clxIZScmVzBEPFUrTjVGXyk2KD5wZ1RzM0s+aWQ9RUlrISgyNTc9ZT5ddGghZ11LTkZwUzNvbjgwb29jRF1DJCFkVWdTL1NDY0khXCpsIyxGcCovW186VDolVnI/RkdsXC5OVTZMb3JfcDEibGNiJTw4bXFxMlNqW1NgKCUsWjEnTUw+RW1fJXA8Ly1VQWwwRjYxWjVeMXVRJnIwXyEzMlVZb2JDQG8iI2RaZUxvKiVzaDFzT08nOVYrLVdCXEVrN25tKzNBY00uYWVyMCYsIWAsTE5TPFUuREtKK0RQIVdvXkJIK0sxPj5ePUQ2TkM1b0JHKFpzKj9NbTpOJSNFTD45ZFFTWzIxU0tNUjNJTEdkZTtmdHJsVClPJStxMzFDT0woP15LJ1hAUWpLQTI/MSFXLUNcJEo2UXNWMHRsSiwuOVJgUF4jdEdIOzo/IV0tNVRUTVVwYkhgRHJca3IoPlMxcV02ZlxyaEwlSyRsSGtUc2NBMiRLRXR1L3VfMCEiQ2FAQkhNby0nZnFXbkJGTUohZEFMI0guPCtbVmI9XVFVdEU5SE07V1NwKHE0ZyZuMl5NX2RKOjNYXzQsOUFRSmZjKUg6R0tYWVBgKWI2JXEzcXVWcERBOVx+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NDkgMDAwMDAgbiAKMDAwMDAwMDcxNyAwMDAwMCBuIAowMDAwMDAwOTc4IDAwMDAwIG4gCjAwMDAwMDEwMzcgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8Y2M0ZmQ1MzNmYjg4OGVmMmZmZjdiY2IxZDJlNzdhMWQ+PGNjNGZkNTMzZmI4ODhlZjJmZmY3YmNiMWQyZTc3YTFkPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA3IDAgUgovUm9vdCA2IDAgUgovU2l6ZSAxMAo+PgpzdGFydHhyZWYKMTkwMgolJUVPRgo=';
 
 const SLOTS = {
     matin: { label: 'Matin 🌅', time: '08:00' },
@@ -470,6 +507,12 @@ function clearFile() {
     document.getElementById('fileBadge').style.display = 'none';
     document.getElementById('fileInput').value         = '';
     document.getElementById('analyzeBtn').disabled     = true;
+}
+
+function loadDemo() {
+    const bytes = Uint8Array.from(atob(DEMO_PDF), c => c.charCodeAt(0));
+    const file  = new File([bytes], 'ordonnance_fictive.pdf', { type: 'application/pdf' });
+    setFile(file);
 }
 
 /* ── Step 1: Analyse ── */
@@ -564,36 +607,121 @@ Règles :
 }
 
 /* ── Step 2: Vérifier ── */
-function renderStep2() {
-    document.getElementById('verifyList').innerHTML = meds.map((m, i) => {
-        const isVerified = verifiedMeds.has(i);
-        return `<div class="card summary-card${isVerified ? ' verified' : ''}" id="vcard-${i}">
+function renderVerifyCard(m, i, isEditing) {
+    const isVerified = verifiedMeds.has(i);
+    if (isEditing) {
+        return `<div class="card summary-card" id="vcard-${i}">
             <div class="card-header-row">
                 <h3>${escHtml(m.name)}${m.dosage ? ' — ' + escHtml(m.dosage) : ''}</h3>
-                <button class="btn-tick${isVerified ? ' verified' : ''}" id="tick-${i}"
-                    onclick="tickCard(${i})" title="C'est correct" ${isVerified ? 'disabled' : ''}>✓</button>
+                <button class="btn-edit-inline" style="border-color:var(--success);color:var(--success);background:#ecfdf5" onclick="saveVerifyCard(${i})" title="Valider">✓</button>
             </div>
-            <div class="summary-meta">
-                ${m.frequency ? `<span class="tag-sm">🔁 ${escHtml(m.frequency)}</span>` : ''}
-                ${m.duration  ? `<span class="tag-sm">📅 ${escHtml(m.duration)}</span>`  : ''}
+            <div class="edit-inline-section">
+                <div class="field"><label>Nom du médicament</label><input type="text" id="ve${i}-name" value="${escHtml(m.name)}" /></div>
+                <div class="field"><label>Dosage</label><input type="text" id="ve${i}-dosage" value="${escHtml(m.dosage || '')}" placeholder="ex: 500 mg" /></div>
+                <div class="field"><label>Fréquence</label><input type="text" id="ve${i}-freq" value="${escHtml(m.frequency || '')}" placeholder="ex: 3 fois par jour" /></div>
+                <div class="field"><label>Durée</label><input type="text" id="ve${i}-dur" value="${escHtml(m.duration || '')}" placeholder="ex: 7 jours" /></div>
+                <div class="field"><label>Instructions spéciales</label><input type="text" id="ve${i}-instr" value="${escHtml(m.special_instructions || '')}" placeholder="ex: Prendre avec les repas" /></div>
             </div>
-            ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
         </div>`;
-    }).join('');
+    }
+    return `<div class="card summary-card${isVerified ? ' verified' : ''}" id="vcard-${i}">
+        <div class="card-header-row">
+            <h3>${escHtml(m.name)}${m.dosage ? ' — ' + escHtml(m.dosage) : ''}</h3>
+            <div class="card-actions">
+                <button class="btn-edit-inline" onclick="editVerifyCard(${i})" title="Modifier">✏️</button>
+                <button class="btn-confirm-check${isVerified ? ' verified' : ''}" id="tick-${i}"
+                    onclick="tickCard(${i})" ${isVerified ? 'disabled' : ''}>
+                    ${isVerified ? '✓ Confirmé' : '☐ Confirmer'}
+                </button>
+            </div>
+        </div>
+        <div class="summary-meta">
+            ${m.frequency ? `<span class="tag-sm">🔁 ${escHtml(m.frequency)}</span>` : ''}
+            ${m.duration  ? `<span class="tag-sm">📅 ${escHtml(m.duration)}</span>`  : ''}
+        </div>
+        ${m.special_instructions ? `<div class="note-inline">⚠️ ${escHtml(m.special_instructions)}</div>` : ''}
+    </div>`;
+}
+
+function renderStep2() {
+    document.getElementById('verifyList').innerHTML = meds.map((m, i) => renderVerifyCard(m, i, false)).join('');
+}
+
+function editVerifyCard(i) {
+    document.getElementById(`vcard-${i}`).outerHTML = renderVerifyCard(meds[i], i, true);
+    document.getElementById(`ve${i}-name`)?.focus();
+}
+
+function saveVerifyCard(i) {
+    const nameEl = document.getElementById(`ve${i}-name`);
+    if (!nameEl) return;
+    meds[i] = {
+        ...meds[i],
+        name:                 nameEl.value.trim() || meds[i].name,
+        dosage:               document.getElementById(`ve${i}-dosage`)?.value.trim() || '',
+        frequency:            document.getElementById(`ve${i}-freq`)?.value.trim()   || '',
+        duration:             document.getElementById(`ve${i}-dur`)?.value.trim()    || '',
+        special_instructions: document.getElementById(`ve${i}-instr`)?.value.trim()  || '',
+    };
+    document.getElementById(`vcard-${i}`).outerHTML = renderVerifyCard(meds[i], i, false);
 }
 
 function tickCard(i) {
     verifiedMeds.add(i);
     document.getElementById(`vcard-${i}`)?.classList.add('verified');
     const btn = document.getElementById(`tick-${i}`);
-    if (btn) { btn.classList.add('verified'); btn.disabled = true; }
+    if (btn) { btn.classList.add('verified'); btn.textContent = '✓ Confirmé'; btn.disabled = true; }
 
     if (verifiedMeds.size === meds.length) {
-        setTimeout(() => {
-            renderStep3();
-            goToStep(3);
-        }, 350);
+        launchConfetti();
+        setTimeout(() => { renderStep3(); goToStep(3); }, 1800);
     }
+}
+
+function launchConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx    = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.display = 'block';
+
+    const colors = ['#2563eb','#10b981','#7c3aed','#f59e0b','#ef4444','#06b6d4'];
+    const particles = Array.from({ length: 140 }, () => ({
+        x:         canvas.width  * (0.3 + Math.random() * 0.4),
+        y:         canvas.height * 0.45,
+        vx:        (Math.random() - 0.5) * 14,
+        vy:        Math.random() * -12 - 4,
+        color:     colors[Math.floor(Math.random() * colors.length)],
+        w:         Math.random() * 9 + 4,
+        h:         Math.random() * 5 + 3,
+        rotation:  Math.random() * 360,
+        rotSpeed:  (Math.random() - 0.5) * 12,
+        gravity:   0.45,
+        alpha:     1,
+    }));
+
+    let rafId;
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+            p.vy += p.gravity; p.x += p.vx; p.y += p.vy;
+            p.rotation += p.rotSpeed; p.alpha -= 0.014;
+            if (p.alpha > 0) {
+                alive = true;
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle   = p.color;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                ctx.restore();
+            }
+        });
+        if (alive) rafId = requestAnimationFrame(animate);
+        else { cancelAnimationFrame(rafId); canvas.style.display = 'none'; }
+    }
+    animate();
 }
 
 /* ── Step 3: Programmer ── */
