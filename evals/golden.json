@@ -1,0 +1,339 @@
+[
+  {
+    "id": "test-001",
+    "mode": "baseline",
+    "description": "Single drug, typed, perfect",
+    "input_text": "Amoxicilline 500mg — 1 comprimé 3 fois par jour pendant 7 jours. Prendre avec les repas.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Amoxicilline",
+          "dosage": "500 mg",
+          "frequency": "3 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": "Prendre avec les repas"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-002",
+    "mode": "baseline",
+    "description": "Two drugs, typed, perfect",
+    "input_text": "Ibuprofène 400mg — 1 comprimé 3 fois par jour pendant 5 jours.\nParacétamol 1000mg — 1 comprimé matin et soir pendant 5 jours.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Ibuprofène",
+          "dosage": "400 mg",
+          "frequency": "3 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Paracétamol",
+          "dosage": "1000 mg",
+          "frequency": "2 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-003",
+    "mode": "frequency_inference",
+    "description": "Frequency written as matin et soir",
+    "input_text": "Métformine 850mg — 1 comprimé matin et soir pendant 30 jours.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Métformine",
+          "dosage": "850 mg",
+          "frequency": "2 fois par jour",
+          "duration": "30 jours",
+          "duration_days": 30,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-004",
+    "mode": "frequency_inference",
+    "description": "Frequency written as toutes les 8 heures",
+    "input_text": "Augmentin 1g — 1 comprimé toutes les 8 heures pendant 10 jours.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Augmentin",
+          "dosage": "1 g",
+          "frequency": "toutes les 8 heures",
+          "duration": "10 jours",
+          "duration_days": 10,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-005",
+    "mode": "missing_duration",
+    "description": "No duration written at all",
+    "input_text": "Levothyrox 50mcg — 1 comprimé par jour le matin à jeun.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Levothyrox",
+          "dosage": "50 mcg",
+          "frequency": "1 fois par jour",
+          "duration": "",
+          "duration_days": 30,
+          "schedule": ["matin"],
+          "special_instructions": "à jeun"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-006",
+    "mode": "missing_duration",
+    "description": "Duration written as jusqu'à amélioration",
+    "input_text": "Ventoline 100mcg — 2 bouffées 3 fois par jour jusqu'à amélioration.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Ventoline",
+          "dosage": "100 mcg",
+          "frequency": "3 fois par jour",
+          "duration": "jusqu'à amélioration",
+          "duration_days": 30,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": "jusqu'à amélioration"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-007",
+    "mode": "multi_drug+missing_duration",
+    "description": "4 drugs, one has no duration",
+    "input_text": "Amoxicilline 1g — 1 comprimé 2 fois par jour pendant 7 jours.\nIbuprofène 400mg — 1 comprimé 3 fois par jour pendant 5 jours.\nOméprazole 20mg — 1 gélule par jour le matin pendant 7 jours.\nSpasfon 80mg — 1 comprimé 3 fois par jour.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Amoxicilline",
+          "dosage": "1 g",
+          "frequency": "2 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Ibuprofène",
+          "dosage": "400 mg",
+          "frequency": "3 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Oméprazole",
+          "dosage": "20 mg",
+          "frequency": "1 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Spasfon",
+          "dosage": "80 mg",
+          "frequency": "3 fois par jour",
+          "duration": "",
+          "duration_days": 30,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-008",
+    "mode": "multi_drug+abbreviation",
+    "description": "4 drugs, two with abbreviated names",
+    "input_text": "Amox 1g — 1 comprimé 2 fois par jour pendant 7 jours.\nDoliprane 1000mg — 1 comprimé matin et soir pendant 5 jours.\nClarityne 10mg — 1 comprimé par jour le matin pendant 14 jours.\nSmecta — 1 sachet 3 fois par jour pendant 5 jours.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Amox",
+          "dosage": "1 g",
+          "frequency": "2 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Doliprane",
+          "dosage": "1000 mg",
+          "frequency": "2 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Clarityne",
+          "dosage": "10 mg",
+          "frequency": "1 fois par jour",
+          "duration": "14 jours",
+          "duration_days": 14,
+          "schedule": ["matin"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Smecta",
+          "dosage": "",
+          "frequency": "3 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-009",
+    "mode": "special_instructions",
+    "description": "à jeun and ne pas écraser instructions",
+    "input_text": "Oméprazole 20mg — 1 gélule par jour le matin pendant 14 jours. A prendre à jeun, ne pas écraser.\nLevothyrox 75mcg — 1 comprimé par jour le matin pendant 30 jours. A prendre à jeun.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Oméprazole",
+          "dosage": "20 mg",
+          "frequency": "1 fois par jour",
+          "duration": "14 jours",
+          "duration_days": 14,
+          "schedule": ["matin"],
+          "special_instructions": "A prendre à jeun, ne pas écraser"
+        },
+        {
+          "name": "Levothyrox",
+          "dosage": "75 mcg",
+          "frequency": "1 fois par jour",
+          "duration": "30 jours",
+          "duration_days": 30,
+          "schedule": ["matin"],
+          "special_instructions": "A prendre à jeun"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-010",
+    "mode": "special_instructions",
+    "description": "à prendre au cours d'un repas",
+    "input_text": "Metformine 500mg — 1 comprimé 3 fois par jour pendant 30 jours. A prendre au cours d'un repas.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Metformine",
+          "dosage": "500 mg",
+          "frequency": "3 fois par jour",
+          "duration": "30 jours",
+          "duration_days": 30,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": "A prendre au cours d'un repas"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-011",
+    "mode": "abbreviation",
+    "description": "Abbreviated drug names returned as-is",
+    "input_text": "Amox 1g — 1 comprimé 2 fois par jour pendant 7 jours.\nDoliprane 500mg — 1 comprimé 3 fois par jour pendant 5 jours.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Amox",
+          "dosage": "1 g",
+          "frequency": "2 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Doliprane",
+          "dosage": "500 mg",
+          "frequency": "3 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-012",
+    "mode": "vague_frequency",
+    "description": "Frequency written as selon les besoins",
+    "input_text": "Spasfon 80mg — 1 comprimé selon les besoins pendant 7 jours. Ne pas dépasser 6 comprimés par jour.",
+    "expected": {
+      "medications": [
+        {
+          "name": "Spasfon",
+          "dosage": "80 mg",
+          "frequency": "selon les besoins",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin"],
+          "special_instructions": "Ne pas dépasser 6 comprimés par jour"
+        }
+      ]
+    }
+  },
+  {
+    "id": "test-013",
+    "mode": "irregular_spacing",
+    "description": "Run-together units, missing punctuation, irregular spacing",
+    "input_text": "Amoxicilline500mg 1comprimé 3x/j pdt7j\nIbuprofène400mg 1cp matin+soir 5jours prendre repas",
+    "expected": {
+      "medications": [
+        {
+          "name": "Amoxicilline",
+          "dosage": "500 mg",
+          "frequency": "3 fois par jour",
+          "duration": "7 jours",
+          "duration_days": 7,
+          "schedule": ["matin", "midi", "soir"],
+          "special_instructions": ""
+        },
+        {
+          "name": "Ibuprofène",
+          "dosage": "400 mg",
+          "frequency": "2 fois par jour",
+          "duration": "5 jours",
+          "duration_days": 5,
+          "schedule": ["matin", "soir"],
+          "special_instructions": "prendre repas"
+        }
+      ]
+    }
+  }
+]
