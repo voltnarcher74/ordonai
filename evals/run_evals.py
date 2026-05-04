@@ -25,6 +25,7 @@ Analyse cette ordonnance et extrais tous les médicaments prescrits.
 
 Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour :
 {
+  "document_type": "prescription",
   "medications": [
     {
       "name": "Nom du médicament",
@@ -39,6 +40,7 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour :
 }
 
 Règles :
+- document_type : "prescription" si le document est une ordonnance médicale, "not_a_prescription" si ce n'est clairement pas une ordonnance, "unreadable" si l'image est trop floue ou illisible
 - schedule : uniquement "matin" (8h), "midi" (13h), "soir" (20h), "nuit" (22h)
 - 1×/j → ["matin"] ; 2×/j → ["matin","soir"] ; 3×/j → ["matin","midi","soir"] ; 4×/j → toutes
 - Si durée absente : duration_days = 30

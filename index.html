@@ -350,6 +350,7 @@
         }
     </style>
 <script src="/logger.js"></script>
+<script src="/guardrails.js"></script>
 </head>
 <body>
 
@@ -607,6 +608,7 @@ Analyse cette ordonnance et extrais tous les médicaments prescrits.
 
 Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour :
 {
+  "document_type": "prescription",
   "medications": [
     {
       "name": "Nom du médicament",
@@ -621,6 +623,7 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour :
 }
 
 Règles :
+- document_type : "prescription" si le document est une ordonnance médicale, "not_a_prescription" si ce n'est clairement pas une ordonnance, "unreadable" si l'image est trop floue ou illisible
 - schedule : uniquement "matin" (8h), "midi" (13h), "soir" (20h), "nuit" (22h)
 - 1×/j → ["matin"] ; 2×/j → ["matin","soir"] ; 3×/j → ["matin","midi","soir"] ; 4×/j → toutes
 - Si durée absente : duration_days = 30
@@ -655,12 +658,21 @@ Règles :
             special_instructions: (m.special_instructions === 'null' || !m.special_instructions) ? '' : m.special_instructions,
         }));
 
-        if (meds.length === 0) {
-            goToStep(1);
-            document.getElementById('analyzeBtn').disabled = false;
-            showError("Aucun médicament extrait. Vérifiez que l'image est nette et lisible.");
-            return;
+        // Run guardrails
+        const guardrail = runGuardrails(parsed);
+
+        if (guardrail.blocked) {
+          goToStep(1);
+          document.getElementById('analyzeBtn').disabled = false;
+          showError(guardrail.blockReason);
+          logEvent('guardrail_blocked', {
+            step: 1,
+            field: guardrail.blockCode
+          });
+          return;
         }
+
+        window._guardrailWarnings = guardrail.warnings;
 
         isEditMode = false;
         renderStep2();
@@ -698,7 +710,13 @@ function renderVerifyCard(m, i) {
 
 function renderStep2() {
     isEditMode = false;
-    document.getElementById('verifyList').innerHTML = meds.map((m, i) => renderVerifyCard(m, i)).join('');
+    const warnings = window._guardrailWarnings || [];
+    const warningHTML = warnings.length > 0
+      ? `<div style="background:#fef9c3;border:1px solid #f59e0b;border-radius:8px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:#78350f">
+          ⚠️ <strong>Points à vérifier :</strong><br>${warnings.map(w => `• ${w}`).join('<br>')}
+        </div>`
+      : '';
+    document.getElementById('verifyList').innerHTML = warningHTML + meds.map((m, i) => renderVerifyCard(m, i)).join('');
 }
 
 function toggleEditMode() {
