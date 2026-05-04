@@ -11,3 +11,6 @@ OrdonAI turns prescriptions into a clear, structured treatment plan. Users uploa
    proxy API calls
   - **Export** — ICS calendar file generation (client-side)
   - **Hosting** — Vercel
+
+ ## Eval Suite
+OrdonAI includes an offline evaluation suite (evals/) to measure extraction quality before any prompt change is shipped. 13 synthetic prescription PDFs cover 8 failure modes: baseline, frequency inference, missing duration, multi-drug, special instructions, abbreviations, vague frequency, and irregular spacing. Each prescription is scored field by field (name, dosage, schedule, duration, special instructions) against a golden dataset.
