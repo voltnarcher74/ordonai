@@ -349,6 +349,7 @@
             border-top: 1px solid var(--border); line-height: 1.5;
         }
     </style>
+<script src="/logger.js"></script>
 </head>
 <body>
 
@@ -623,6 +624,7 @@ Règles :
 - schedule : uniquement "matin" (8h), "midi" (13h), "soir" (20h), "nuit" (22h)
 - 1×/j → ["matin"] ; 2×/j → ["matin","soir"] ; 3×/j → ["matin","midi","soir"] ; 4×/j → toutes
 - Si durée absente : duration_days = 30
+- Si fréquence vague ou indéterminée (ex: "selon les besoins", "si nécessaire", "en cas de douleur") : schedule = ["matin"]
 - Si illisible : medications = []`;
 
         const resp = await fetch('/api/proxy', {
@@ -663,6 +665,7 @@ Règles :
         isEditMode = false;
         renderStep2();
         goToStep(2);
+        logEvent('extraction_completed', { meds_count: meds.length, step: 1 });
 
     } catch (err) {
         goToStep(1);
@@ -700,6 +703,16 @@ function renderStep2() {
 
 function toggleEditMode() {
     if (isEditMode) {
+        const fields = ['name', 'dosage', 'frequency', 'duration', 'special_instructions'];
+        const fieldIds = { name: 'name', dosage: 'dosage', frequency: 'freq', duration: 'dur', special_instructions: 'instr' };
+        meds.forEach((m, i) => {
+            fields.forEach(field => {
+                const el = document.getElementById(`ve${i}-${fieldIds[field]}`);
+                if (el && el.value.trim() !== String(m[field] || '')) {
+                    logEvent('modifier_used', { med_name: m.name, field, step: 2 });
+                }
+            });
+        });
         meds = meds.map((m, i) => ({
             ...m,
             name:                 document.getElementById(`ve${i}-name`)?.value.trim()   || m.name,
@@ -722,6 +735,7 @@ function toggleEditMode() {
 }
 
 function proceedToStep3() {
+    meds.forEach(m => logEvent('card_verified', { med_name: m.name, step: 2 }));
     renderStep3();
     goToStep(3);
 }
@@ -799,6 +813,7 @@ function nextSchedCard(i) {
         schedIdx = i + 1;
         renderSchedCard(i + 1);
     } else {
+        logEvent('schedule_confirmed', { meds_count: meds.length, step: 3 });
         launchConfetti();
         setTimeout(() => { renderStep4(); goToStep(4); }, 1200);
     }
@@ -889,6 +904,7 @@ function launchConfetti() {
 
 /* ── ICS export ── */
 function downloadICS() {
+    logEvent('ics_downloaded', { meds_count: meds.length, step: 4 });
     const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//OrdonAI//FR','CALSCALE:GREGORIAN','METHOD:PUBLISH'];
 
     meds.forEach(med => {
