@@ -1,0 +1,7 @@
+{
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/logger.js",     "destination": "/public/logger.js" },
+    { "source": "/guardrails.js", "destination": "/public/guardrails.js" }
+  ]
+}
