@@ -80,8 +80,8 @@ function runGuardrails(parsed) {
       result.warnings.push(`Horaire manquant pour ${label} — vérifiez la fréquence.`);
     }
 
-    // Unrealistic duration
-    if (med.duration_days > 365) {
+    // Unrealistic duration (null is valid — means no duration specified)
+    if (med.duration_days != null && med.duration_days > 365) {
       result.warnings.push(`Durée inhabituelle pour ${label} (${med.duration_days} jours) — vérifiez.`);
     }
   });

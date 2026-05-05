@@ -40,11 +40,17 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni texte autour :
 }
 
 Règles :
-- document_type : "prescription" si le document est une ordonnance médicale, "not_a_prescription" si ce n'est clairement pas une ordonnance, "unreadable" si l'image est trop floue ou illisible
 - schedule : uniquement "matin" (8h), "midi" (13h), "soir" (20h), "nuit" (22h)
 - 1×/j → ["matin"] ; 2×/j → ["matin","soir"] ; 3×/j → ["matin","midi","soir"] ; 4×/j → toutes
-- Si durée absente : duration_days = 30
 - Si fréquence vague ou indéterminée (ex: "selon les besoins", "si nécessaire", "en cas de douleur") : schedule = ["matin"]
+- duration et duration_days : extraire uniquement si la durée est clairement indiquée pour le patient
+- QSP X mois → duration = "QSP X mois", duration_days = X × 30
+- AR X fois → ignorer complètement, duration = "", duration_days = null
+- "1 boite", "2 boites" etc → mettre dans special_instructions, duration = "", duration_days = null
+- "si nausée", "si douleur", "si fièvre" etc → mettre dans special_instructions, duration = "", duration_days = null
+- Si durée absente ou non applicable : duration = "", duration_days = null
+- Ne jamais corriger ou compléter le nom du médicament — retourner exactement ce qui est écrit
+- document_type : "prescription" si le document est une ordonnance médicale, "not_a_prescription" si ce n'est clairement pas une ordonnance, "unreadable" si l'image est trop floue ou illisible
 - Si illisible : medications = []"""
 
 
@@ -138,7 +144,8 @@ def score_medication(got: dict, expected: dict) -> tuple[int, int, list[str]]:
     else:
         failures.append(f"schedule: got {got_sched} expected {exp_sched}")
 
-    # 4. duration_days — exact number match
+    # 4. duration_days — exact match; null is a valid value (means no duration specified)
+    # null==null → pass, null==number → fail, number==null → fail
     got_days = got.get("duration_days")
     exp_days = expected.get("duration_days")
     if got_days == exp_days:
